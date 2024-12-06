@@ -28,7 +28,7 @@ pipeline {
     }
     stage('Build and Push Docker Image') {
       environment {
-        DOCKER_IMAGE = "MOO-TEZ/demo-java-app:${build_version}"
+        DOCKER_IMAGE = "makhloufy/demo-java-app:${build_version}"
         REGISTRY_CREDENTIALS = credentials('dockerhub')
       }
       steps {
@@ -58,6 +58,14 @@ pipeline {
                 '''
             }
         }
+    }
+    stage('Run Jenkins with Docker') {
+      steps {
+        script {
+          // Make sure Jenkins starts on the correct port (8010)
+          sh 'docker run -d -p 8010:8010 makhloufy/jenkins-with-docker-maven:latest'
+        }
+      }
     }
   }
 }
